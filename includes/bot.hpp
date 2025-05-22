@@ -3,23 +3,21 @@
 #ifndef SMARTTGBOTPP_HPP
 #define SMARTTGBOTPP_HPP
 
-#include <string>
+#include "API.hpp"
 
 namespace SmartTgBotPP
 {
-    using TSTR = std::string;
-    using TCSTR = const TSTR;
-    using TCVOID = const void;
-
     class bot
     {
         TSTR BotToken;
 
       public:
-        bot();
-        bot(TCSTR &BotToken);
+        explicit bot();
+        explicit bot(TCSTR &BotToken);
 
         TCVOID SetToken(TCSTR &BotToken);
+
+        TCPAIR GetUpdates(void) const;
     };
 } // namespace SmartTgBotPP
 
