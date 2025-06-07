@@ -13,12 +13,22 @@ namespace SmartTgBotPP
 {
     class message
     {
-        int id = 0, ThreadID = 0;
+        int ID = 0, ThreadID = 0;
 
-	std::unique_ptr<user> _user;
+        std::shared_ptr<user> _user;
+
+        std::string text;
 
       public:
         explicit message(void) = default;
+
+        message &operator=(const message &_message);
+
+        const void SetText(const std::string &text);
+
+        const int &GetID(void) const;
+
+        const std::string &GetText(void) const;
     };
 } // namespace SmartTgBotPP
 

@@ -1,4 +1,5 @@
 #include "../includes/bot.hpp"
+#include "../includes/nlohmann/json.hpp"
 
 #include <assert.h>
 #include <cstdio>
@@ -34,7 +35,33 @@ STBPP::TCVOID STBPP::bot::SetToken(STBPP::TCSTR &BotToken)
     this->BotToken = BotToken;
 }
 
-STBPP::TCPAIR STBPP::bot::GetUpdates(void) const
+STBPP::TCVOID STBPP::bot::SendMessage(const std::string &ChatID, const message &_message) const
+{
+    auto handle = std::make_unique<CURL *>(curl_easy_init());
+
+    if (*handle)
+    {
+        std::string postfileds = "chat_id=" + ChatID + "&text=" + _message.GetText(),
+                    URL = "https://api.telegram.org/bot" + BotToken + "/sendMessage";
+        curl_easy_setopt(*handle, CURLOPT_POSTFIELDS, postfileds.c_str());
+        curl_easy_setopt(*handle, CURLOPT_URL, URL.c_str());
+
+        auto res = std::make_unique<CURLcode>(curl_easy_perform(*handle));
+
+        if (!res)
+        {
+            perror("ERROR0");
+        }
+
+        curl_easy_cleanup(*handle);
+    }
+    else
+    {
+        perror("ERROR1");
+    }
+}
+
+STBPP::TCPAIR<STBPP::update> STBPP::bot::GetUpdate(void) const
 {
     auto handle = std::make_unique<CURL *>(curl_easy_init());
 
@@ -45,7 +72,7 @@ STBPP::TCPAIR STBPP::bot::GetUpdates(void) const
     if (*handle)
     {
         curl_easy_setopt(*handle, CURLOPT_URL,
-                         "https://api.telegram.org/bot7637934556:AAElfYnafoO2C3RIDFU_kjspp5p8bDb78x4/getUpdates");
+                         std::string("https://api.telegram.org/bot" + BotToken + "/getUpdates").c_str());
         curl_easy_setopt(*handle, CURLOPT_WRITEFUNCTION, libCURLGetRaw);
         curl_easy_setopt(*handle, CURLOPT_WRITEDATA, &temp);
 
@@ -57,13 +84,26 @@ STBPP::TCPAIR STBPP::bot::GetUpdates(void) const
         }
 
         curl_easy_cleanup(*handle);
-
-        printf("%b", *res);
     }
     else
     {
         perror("Error 0");
     }
 
-    return TCPAIR(*handle, temp);
+    auto output = std::make_unique<update>();
+
+    if (nlohmann::json::accept(temp))
+    {
+        auto json = std::make_unique<nlohmann::json>(nlohmann::json::parse(temp));
+
+        if (json->contains("ok") && json->at("ok").get<bool>() == true)
+        {
+            if (json->at("result").is_array())
+            {
+                output->SetUpdateID(json->at("result")[0].at("update_id").get<int>());
+            }
+        }
+    }
+
+    return TCPAIR<update>(*handle, *output);
 }

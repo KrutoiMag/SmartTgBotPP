@@ -18,6 +18,7 @@ namespace SmartTgBotPP
         bool IsForum = false;
 
       public:
+	const int GetID(void) const;
     };
 } // namespace SmartTgBotPP
 

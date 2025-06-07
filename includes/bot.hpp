@@ -4,6 +4,7 @@
 #define SMARTTGBOTPP_HPP
 
 #include "API.hpp"
+#include "update.hpp"
 
 namespace SmartTgBotPP
 {
@@ -15,9 +16,9 @@ namespace SmartTgBotPP
         explicit bot();
         explicit bot(TCSTR &BotToken);
 
-        TCVOID SetToken(TCSTR &BotToken);
+        TCVOID SetToken(TCSTR &BotToken), SendMessage(const std::string &ChatID, const message &_message) const;
 
-        TCPAIR GetUpdates(void) const;
+        TCPAIR<update> GetUpdate(void) const;
     };
 } // namespace SmartTgBotPP
 
