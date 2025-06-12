@@ -2,17 +2,17 @@
 
 using STBPPW = SmartTgBotPP::watcher;
 
-STBPPW::watcher(const SmartTgBotPP::bot &_bot)
+STBPPW::watcher(SmartTgBotPP::bot &_bot)
 {
     init(_bot);
 }
 
-const void STBPPW::init(const SmartTgBotPP::bot &_bot)
+const void STBPPW::init(SmartTgBotPP::bot &_bot)
 {
-    this->_bot = std::make_unique<const SmartTgBotPP::bot *>(&_bot);
+    this->_bot = std::make_shared<SmartTgBotPP::bot *>(&_bot);
 }
 
 const bool STBPPW::watch(void) const
 {
-    return (*_bot)->GetUpdate().first;
+    return (*_bot)->RequestUpdate().has_value();
 }

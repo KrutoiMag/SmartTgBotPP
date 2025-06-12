@@ -11,13 +11,13 @@ namespace SmartTgBotPP
 {
     class watcher
     {
-        std::unique_ptr<const bot *> _bot;
+        std::shared_ptr<bot*> _bot;
 
       public:
         explicit watcher(void) = default;
-        explicit watcher(const SmartTgBotPP::bot &_bot);
+        explicit watcher(SmartTgBotPP::bot &_bot);
 
-        const void init(const SmartTgBotPP::bot &_bot);
+        const void init(SmartTgBotPP::bot &_bot);
 
         const bool watch(void) const;
     };

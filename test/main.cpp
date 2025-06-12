@@ -1,8 +1,10 @@
+#include "../includes/ChatFullInfo.hpp"
 #include "../includes/SmartTgBotPP.hpp"
 #include "../includes/nlohmann/json.hpp"
 #include "../includes/user.hpp"
 
 #include <cstdlib>
+#include <exception>
 #include <iostream>
 #include <memory.h>
 
@@ -12,16 +14,23 @@ int main(void)
 {
     std::ios::sync_with_stdio(false);
 
-    SmartTgBotPP::bot bot("7637934556:AAFpOp4QsCPb4GLRP3COVZdL7NTmCb9vu-U");
-    SmartTgBotPP::watcher watcher(bot);
-    SmartTgBotPP::message message;
-
-    message.SetText("siski");
-
-    while (watcher.watch())
+    try
     {
-	    bot.SendMessage("7118418038", message);
-	    cout << bot.GetUpdate().second.GetUpdateID() << endl;
+        SmartTgBotPP::bot bot("ENTER YOUR BOT TOKEN HERE!");
+        SmartTgBotPP::watcher watcher(bot);
+        SmartTgBotPP::message message;
+
+        message.SetText("Hi!");
+
+        while (watcher.watch())
+        {
+            cout << bot.GetUpdate()->GetMessage().GetChat().GetID() << endl;
+            bot.SendMessage(std::to_string(bot.GetUpdate()->GetMessage().GetChat().GetID()), message);
+        }
+    }
+    catch (exception &ex)
+    {
+        cout << ex.what();
     }
 
     return EXIT_SUCCESS;

@@ -16,12 +16,12 @@ STBPPU::user(const int &ID, const bool &IsBot, const bool &IsPremium, const bool
     _HasMainWebApp = HasMainWebApp;
 }
 
-const int &STBPPU::GetID(void) const
+const std::size_t &STBPPU::GetID(void) const
 {
     return _ID;
 }
 
-const void STBPPU::SetID(const int &ID)
+const void STBPPU::SetID(const std::size_t &ID)
 {
     _ID = ID;
 }

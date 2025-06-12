@@ -5,20 +5,18 @@
 #ifndef SMARTTGBOTPP_CHATFULLINFO_HPP
 #define SMARTTGBOTPP_CHATFULLINFO_HPP
 
+#include "chat.hpp"
+
 #include <string>
 
 namespace SmartTgBotPP
 {
-    class ChatFullInfo
+    class ChatFullInfo : public chat
     {
-        int id = 0, AccentColorId = 0, MaxReactionCount = 0;
-
-        std::string type, title, username, FirstName, LastName;
-
-        bool IsForum = false;
+        int AccentColorId = 0, MaxReactionCount = 0;
 
       public:
-	const int GetID(void) const;
+        explicit ChatFullInfo(void) = default;
     };
 } // namespace SmartTgBotPP
 

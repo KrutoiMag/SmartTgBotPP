@@ -11,7 +11,7 @@ namespace SmartTgBotPP
 {
     class user
     {
-        int _ID = 0;
+        std::size_t _ID = 0;
         bool _IsBot = false, _IsPremium = false, _AddedToAttachmentMenu = false, _CanJoinGroups = false,
              _CanReadAllGroupMessages = false, _SupportsInlineQueries = false, _CanConnectToBusiness = false,
              _HasMainWebApp = false;
@@ -24,9 +24,9 @@ namespace SmartTgBotPP
                       const bool &CanReadAllGroupMessages = false, const bool &SupportsInlineQueries = false,
                       const bool &CanConnectToBusiness = false, const bool &HasMainWebApp = false);
 
-        const int &GetID(void) const;
+        const std::size_t &GetID(void) const;
 
-        const void SetID(const int &ID), SetFirstName(const std::string &FirstName),
+        const void SetID(const std::size_t &ID), SetFirstName(const std::string &FirstName),
             SetLastName(const std::string &LastName), SetUsername(const std::string &username),
             SetLanguageCode(const std::string &LanguageCode);
 

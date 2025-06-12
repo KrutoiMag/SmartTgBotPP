@@ -14,7 +14,7 @@ namespace SmartTgBotPP
 
     template <class T> using TPAIR = std::pair<TCBOOL, T>;
 
-    template <class T> using TCPAIR = const std::pair<const TCBOOL, const T>;
+    template <class T> using TCPAIR = const std::pair<bool, T>;
 } // namespace SmartTgBotPP
 
 #endif // SMARTTGBOTPP_API_HPP
