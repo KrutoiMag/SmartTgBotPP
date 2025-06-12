@@ -1,5 +1,6 @@
 # SmartTgBotPP
-### Dependencies:
+### Requirements
+- Compiler that supports C++17!
 - [libcurl](https://libcurl.se/) installed on your OS!
 - [xmake](https://xmake.io/)'s executable in your PATH!
 ### Sample
