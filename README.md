@@ -47,3 +47,5 @@ xmake build SmartTgBotPP
 ```shell
 xmake run test
 ```
+---
+[LICENSE](LICENSE)
