@@ -1,3 +1,9 @@
+# SmartTgBotPP
+### Dependencies:
+- [libcurl](https://libcurl.se/) installed on your OS!
+- [xmake](https://xmake.io/)'s executable in your PATH!
+### Sample
+```cpp
 #include "../includes/SmartTgBotPP.hpp"
 
 #include <cstdlib>
@@ -32,3 +38,12 @@ int main(void)
 
     return EXIT_SUCCESS;
 }
+```
+### Building project
+```shell
+xmake build SmartTgBotPP
+```
+### Running a test program
+```shell
+xmake run test
+```
