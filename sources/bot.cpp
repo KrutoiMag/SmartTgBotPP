@@ -61,9 +61,9 @@ inline const void ParseResultMessage(const nlohmann::json &raw)
     ParseResultMessageFrom(raw);
 }
 
-inline const std::optional<SmartTgBotPP::update> ParseResult(const std::string &raw)
+inline const std::vector<SmartTgBotPP::update> ParseResult(const std::string &raw)
 {
-    auto output = std::make_unique<SmartTgBotPP::update>();
+    auto output = std::make_unique<std::vector<SmartTgBotPP::update>>();
 
     if (nlohmann::json::accept(raw))
     {
@@ -71,49 +71,52 @@ inline const std::optional<SmartTgBotPP::update> ParseResult(const std::string &
 
         if (tmp->contains("result"))
         {
-            if (tmp->at("result")[0].contains("update_id"))
+            for (const auto &i : tmp->at("result"))
             {
-                output->SetUpdateID(tmp->at("result")[0].at("update_id").get<std::size_t>());
-            }
-            if (tmp->at("result")[0].contains("message"))
-            {
-                auto json = std::make_unique<nlohmann::json>(tmp->at("result")[0].at("message"));
-                if (json->contains("message_id"))
+                auto tt = std::make_unique<SmartTgBotPP::update>();
+
+                if (i.contains("update_id"))
                 {
+                    tt->SetUpdateID(tmp->at("result")[0].at("update_id").get<std::size_t>());
                 }
-                if (json->contains("from"))
+                if (i.contains("message"))
                 {
-                    auto usr = std::make_unique<SmartTgBotPP::user>();
-                    if (json->at("from").contains("id"))
+                    auto json = std::make_unique<nlohmann::json>(i.at("message"));
+                    if (json->contains("message_id"))
                     {
-                        usr->SetID(json->at("from").at("id").get<std::size_t>());
                     }
-                    output->GetMessage().SetUser(*usr);
-                }
-                if (json->contains("chat"))
-                {
-                    auto t = std::make_unique<SmartTgBotPP::chat>();
+                    if (json->contains("from"))
+                    {
+                        auto usr = std::make_unique<SmartTgBotPP::user>();
+                        if (json->at("from").contains("id"))
+                        {
+                            usr->SetID(json->at("from").at("id").get<std::size_t>());
+                        }
+                        tt->GetMessage().SetUser(*usr);
+                    }
+                    if (json->contains("chat"))
+                    {
+                        auto t = std::make_unique<SmartTgBotPP::chat>();
 
-                    if (json->at("chat").contains("id"))
-                        t->SetID(json->at("chat").at("id").get<std::size_t>());
+                        if (json->at("chat").contains("id"))
+                            t->SetID(json->at("chat").at("id").get<std::size_t>());
 
-                    output->GetMessage().SetChat(*t);
+                        tt->GetMessage().SetChat(*t);
+                    }
+                    if (json->contains("text"))
+                    {
+                        tt->GetMessage().SetText(json->at("text").get<std::string>());
+                    }
                 }
-                if (json->contains("text"))
-                {
-                    output->GetMessage().SetText(json->at("text").get<std::string>());
-                }
+
+                output->push_back(*tt);
             }
             // if (tmp->at("result").contains("message_id"))
             // ParseResultUpdateID(tmp->at("result").at("message_id").get<int>());
         }
     }
-    else
-    {
-        return std::nullopt;
-    }
 
-    return std::make_optional(*output);
+    return *output;
 }
 
 inline size_t libCURLGetRaw(void *buffer, std::size_t size, std::size_t nmemb, std::string *data)
@@ -147,6 +150,11 @@ STBPP::TCVOID STBPP::bot::SetToken(STBPP::TCSTR &BotToken)
     this->BotToken = BotToken;
 }
 
+STBPP::TCVOID SmartTgBotPP::bot::SetOffset(const std::size_t &offset)
+{
+    this->offset = offset;
+}
+
 const bool STBPP::bot::SendMessage(const std::string &ChatID, const message &_message) const
 {
     auto handle = std::make_unique<CURL *>(curl_easy_init());
@@ -175,7 +183,7 @@ const bool STBPP::bot::SendMessage(const std::string &ChatID, const message &_me
     return *handle;
 }
 
-std::optional<STBPP::update> STBPP::bot::RequestUpdate(void)
+std::vector<STBPP::update> STBPP::bot::RequestUpdates(void)
 {
     auto handle = std::make_unique<CURL *>(curl_easy_init());
 
@@ -185,14 +193,16 @@ std::optional<STBPP::update> STBPP::bot::RequestUpdate(void)
 
     if (*handle)
     {
-        curl_easy_setopt(*handle, CURLOPT_URL,
-                         std::string("https://api.telegram.org/bot" + BotToken + "/getUpdates").c_str());
+        curl_easy_setopt(
+            *handle, CURLOPT_URL,
+            std::string("https://api.telegram.org/bot" + BotToken + "/getUpdates?offset=" + std::to_string(offset))
+                .c_str());
         curl_easy_setopt(*handle, CURLOPT_WRITEFUNCTION, libCURLGetRaw);
         curl_easy_setopt(*handle, CURLOPT_WRITEDATA, &temp);
 
         res = std::make_unique<CURLcode>(curl_easy_perform(*handle));
 
-        if (!res)
+        if ((*res) != CURLE_OK)
         {
             throw std::runtime_error("Failed to establish connection!");
         }
@@ -205,16 +215,12 @@ std::optional<STBPP::update> STBPP::bot::RequestUpdate(void)
         throw std::runtime_error("Failed to initialize libcurl!");
     }
 
-    if (ParseResult(temp).has_value())
-    {
-        CurrentUpdate = std::make_shared<update>(ParseResult(temp).value());
-        return *CurrentUpdate;
-    }
-    else
-        return std::nullopt;
+    CurrentUpdates = std::make_shared<std::vector<update>>(ParseResult(temp));
+
+    return *CurrentUpdates;
 }
 
-std::optional<STBPP::update> STBPP::bot::GetUpdate(void)
+std::vector<STBPP::update> STBPP::bot::GetUpdates(void)
 {
-    return *CurrentUpdate;
+    return *CurrentUpdates;
 }
