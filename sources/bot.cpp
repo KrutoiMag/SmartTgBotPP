@@ -61,27 +61,27 @@ inline const void ParseResultMessage(const nlohmann::json &raw)
     ParseResultMessageFrom(raw);
 }
 
-inline const std::vector<SmartTgBotPP::update> ParseResult(const std::string &raw)
+inline const std::optional<SmartTgBotPP::update> ParseResult(const std::string &raw)
 {
-    auto output = std::make_unique<std::vector<SmartTgBotPP::update>>();
+    std::unique_ptr<SmartTgBotPP::update> output;
 
     if (nlohmann::json::accept(raw))
     {
         auto tmp = std::make_unique<nlohmann::json>(nlohmann::json::parse(raw));
 
-        if (tmp->contains("result"))
+        if (tmp->contains("ok") && tmp->at("ok").get<bool>() == true)
         {
-            for (const auto &i : tmp->at("result"))
-            {
-                auto tt = std::make_unique<SmartTgBotPP::update>();
+            auto tt = std::make_unique<SmartTgBotPP::update>();
 
-                if (i.contains("update_id"))
+            if (!tmp->at("result").empty())
+            {
+                if (tmp->at("result")[0].contains("update_id"))
                 {
                     tt->SetUpdateID(tmp->at("result")[0].at("update_id").get<std::size_t>());
                 }
-                if (i.contains("message"))
+                if (tmp->at("result")[0].contains("message"))
                 {
-                    auto json = std::make_unique<nlohmann::json>(i.at("message"));
+                    auto json = std::make_unique<nlohmann::json>(tmp->at("result")[0].at("message"));
                     if (json->contains("message_id"))
                     {
                     }
@@ -109,14 +109,17 @@ inline const std::vector<SmartTgBotPP::update> ParseResult(const std::string &ra
                     }
                 }
 
-                output->push_back(*tt);
+                output = std::make_unique<SmartTgBotPP::update>(*tt);
             }
             // if (tmp->at("result").contains("message_id"))
             // ParseResultUpdateID(tmp->at("result").at("message_id").get<int>());
         }
     }
 
-    return *output;
+    if (output)
+        return std::make_optional(*output);
+
+    return std::nullopt;
 }
 
 inline size_t libCURLGetRaw(void *buffer, std::size_t size, std::size_t nmemb, std::string *data)
@@ -183,7 +186,7 @@ const bool STBPP::bot::SendMessage(const std::string &ChatID, const message &_me
     return *handle;
 }
 
-std::vector<STBPP::update> STBPP::bot::RequestUpdates(void)
+STBPP::update STBPP::bot::RequestUpdate(void)
 {
     auto handle = std::make_unique<CURL *>(curl_easy_init());
 
@@ -215,12 +218,24 @@ std::vector<STBPP::update> STBPP::bot::RequestUpdates(void)
         throw std::runtime_error("Failed to initialize libcurl!");
     }
 
-    CurrentUpdates = std::make_shared<std::vector<update>>(ParseResult(temp));
+    JSON = temp;
 
-    return *CurrentUpdates;
+    std::optional<update> parsed = ParseResult(temp);
+
+    if (parsed.has_value())
+        CurrentUpdate = std::make_shared<update>(parsed.value());
+    else
+        CurrentUpdate = std::make_shared<update>();
+
+    return *CurrentUpdate;
 }
 
-std::vector<STBPP::update> STBPP::bot::GetUpdates(void)
+STBPP::update STBPP::bot::GetUpdate(void)
 {
-    return *CurrentUpdates;
+    return *CurrentUpdate;
+}
+
+const std::string &STBPP::bot::GetJSON(void) const
+{
+    return JSON;
 }

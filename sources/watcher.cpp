@@ -1,7 +1,9 @@
+#include "../includes/nlohmann/json.hpp"
 #include "../includes/watcher.hpp"
 
 #include <algorithm>
 #include <chrono>
+#include <memory>
 
 using STBPPW = SmartTgBotPP::watcher;
 
@@ -30,21 +32,34 @@ const void STBPPW::SetTimeout(const double &milliseconds)
 
 const bool STBPPW::watch(void) const
 {
+    std::unique_ptr<nlohmann::json> js;
+
     if (_timer->get() >= milliseconds)
     {
-        std::size_t offset = 0;
+        (*_bot)->RequestUpdate();
 
-        for (const auto &i : (*_bot)->GetUpdates())
+        js = std::make_unique<nlohmann::json>(nlohmann::json::parse((*_bot)->GetJSON()));
+
+        if (!js->at("result").empty())
         {
-            offset = std::max(i.GetUpdateID(), offset);
+            std::size_t offset = 0;
+
+            for (const auto &i : js->at("result"))
+            {
+                if (offset == 0)
+                    offset = i.at("update_id").get<std::size_t>();
+                else
+                    offset = std::min(i.at("update_id").get<std::size_t>(), offset);
+            }
+
+            offset += 1;
+
+            (*_bot)->SetOffset(offset);
         }
-
-        offset += 1;
-
-        (*_bot)->SetOffset(offset);
-
-        return !(*_bot)->RequestUpdates().empty();
     }
-    else
-        return true;
+
+    if (js && js->at("ok").get<bool>() == false)
+        return false;
+
+    return (!js || js->at("ok").get<bool>());
 }

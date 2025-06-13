@@ -19,24 +19,15 @@ int main(void)
 
         message.SetText("Hi!");
 
-        watcher.SetTimeout(1);
-
-        // SmartTgBotPP::timer timer;
-        //
-        // timer.start();
-        //
-        // while (true)
-        // {
-        //     cout << timer.get() << endl;
-        // }
+        watcher.SetTimeout(0);
 
         while (watcher.watch())
         {
-            cout << bot.GetUpdates().size() << endl;
-            for (auto &i : bot.GetUpdates())
+            if (!bot.GetUpdate().GetMessage().GetText().empty())
             {
-                cout << i.GetMessage().GetText() << endl;
-                // bot.SendMessage(std::to_string(bot.GetUpdate()->GetMessage().GetChat().GetID()), message);
+                cout << bot.GetUpdate().GetMessage().GetText() << endl;
+                message.SetText("UpdateID: " + std::to_string(bot.GetUpdate().GetUpdateID()));
+                bot.SendMessage(std::to_string(bot.GetUpdate().GetMessage().GetChat().GetID()), message);
             }
         }
     }

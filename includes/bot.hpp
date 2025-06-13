@@ -16,9 +16,11 @@ namespace SmartTgBotPP
     {
         TSTR BotToken;
 
-        std::shared_ptr<std::vector<update>> CurrentUpdates = std::make_shared<std::vector<update>>();
+        std::shared_ptr<update> CurrentUpdate = std::make_shared<update>();
 
         std::size_t offset = 0;
+
+        std::string JSON;
 
       public:
         explicit bot();
@@ -29,9 +31,11 @@ namespace SmartTgBotPP
 
         const bool SendMessage(const std::string &ChatID, const message &_message) const;
 
-        std::vector<update> RequestUpdates(void);
+        update RequestUpdate(void);
 
-        std::vector<update> GetUpdates(void);
+        update GetUpdate(void);
+
+        const std::string &GetJSON(void) const;
     };
 } // namespace SmartTgBotPP
 

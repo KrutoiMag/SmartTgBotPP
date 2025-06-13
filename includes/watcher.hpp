@@ -15,7 +15,7 @@ namespace SmartTgBotPP
         std::shared_ptr<bot *> _bot;
         std::shared_ptr<timer> _timer = std::make_shared<timer>();
 
-        double milliseconds = 5;
+        double milliseconds = 0;
 
 	int offset = 0;
 
