@@ -20,7 +20,7 @@ int main(void)
 
     try
     {
-        SmartTgBotPP::bot bot("ENTER YOUR BOT TOKEN HERE!");
+        SmartTgBotPP::bot bot("YOUR BOT TOKEN HERE!");
         SmartTgBotPP::watcher watcher(bot);
         SmartTgBotPP::message message;
 
