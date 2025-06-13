@@ -1,0 +1,41 @@
+[
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/test/linux/x86_64/release/platform/windows/idl", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/test/linux/x86_64/release/test/main.cpp.o", "test/main.cpp"],
+  "file": "test/main.cpp"
+},
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/SmartTgBotPP/linux/x86_64/release/sources/ChatFullInfo.cpp.o", "sources/ChatFullInfo.cpp"],
+  "file": "sources/ChatFullInfo.cpp"
+},
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/SmartTgBotPP/linux/x86_64/release/sources/user.cpp.o", "sources/user.cpp"],
+  "file": "sources/user.cpp"
+},
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/SmartTgBotPP/linux/x86_64/release/sources/chat.cpp.o", "sources/chat.cpp"],
+  "file": "sources/chat.cpp"
+},
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/SmartTgBotPP/linux/x86_64/release/sources/update.cpp.o", "sources/update.cpp"],
+  "file": "sources/update.cpp"
+},
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/SmartTgBotPP/linux/x86_64/release/sources/message.cpp.o", "sources/message.cpp"],
+  "file": "sources/message.cpp"
+},
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/SmartTgBotPP/linux/x86_64/release/sources/watcher.cpp.o", "sources/watcher.cpp"],
+  "file": "sources/watcher.cpp"
+},
+{
+  "directory": "/home/sasha2k62024/SmartTgBotPP",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Ibuild/.gens/SmartTgBotPP/linux/x86_64/release/platform/windows/idl", "-DNDEBUG", "-o", "build/.objs/SmartTgBotPP/linux/x86_64/release/sources/bot.cpp.o", "sources/bot.cpp"],
+  "file": "sources/bot.cpp"
+}]
