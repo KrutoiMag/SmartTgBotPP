@@ -13,7 +13,7 @@ int main(void)
 
     try
     {
-        SmartTgBotPP::bot bot("7637934556:AAFpOp4QsCPb4GLRP3COVZdL7NTmCb9vu-U");
+        SmartTgBotPP::bot bot("YOUR TOKEN HERE!");
         SmartTgBotPP::watcher watcher(bot);
         SmartTgBotPP::message message;
 
