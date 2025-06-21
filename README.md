@@ -36,7 +36,7 @@ xmake -b [SmartTgBotPP,test]
 ```
 ### Running a test program
 ```shell
-xmake run test
+xmake run test BOT_TOKEN
 ```
 ---
 [LICENSE](LICENSE)
