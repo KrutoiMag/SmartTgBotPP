@@ -8,13 +8,13 @@
 
 using namespace std;
 
-int main(void)
+int main(int argc, char **argv)
 {
     std::ios::sync_with_stdio(false);
 
     try
     {
-        SmartTgBotPP::bot bot("7637934556:AAFpOp4QsCPb4GLRP3COVZdL7NTmCb9vu-U");
+        SmartTgBotPP::bot bot(argv[1]);
         SmartTgBotPP::watcher watcher(bot);
         SmartTgBotPP::message message;
         SmartTgBotPP::InlineKeyboardMarkup InlineKeyboardMarkup;
