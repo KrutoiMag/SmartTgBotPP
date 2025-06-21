@@ -30,9 +30,10 @@ int main()
     return EXIT_SUCCESS;
 }
 ```
+Wanna some examples? &mdash; Checkout an [examples](examples) folder!
 ### Building project
 ```shell
-xmake -b [SmartTgBotPP,test]
+xmake
 ```
 ### Running a test program
 ```shell
