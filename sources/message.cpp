@@ -15,6 +15,11 @@ SmartTgBotPP::message &SmartTgBotPP::message::operator=(const message &_message)
     return *this;
 }
 
+SmartTgBotPP::message::message(const std::string &text)
+{
+    this->text = text;
+}
+
 const void SmartTgBotPP::message::SetText(const std::string &text)
 {
     this->text = text;

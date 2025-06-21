@@ -25,6 +25,7 @@ namespace SmartTgBotPP
       public:
         explicit message(void) = default;
         explicit message(const message &_message);
+        explicit message(const std::string &text);
 
         message &operator=(const message &_message);
 

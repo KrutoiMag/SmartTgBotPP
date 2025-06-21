@@ -179,7 +179,6 @@ const bool STBPP::bot::SendMessage(const std::size_t &ChatID, const message &_me
                      {"callback_data", _InlineKeyboardMarkup->GetButtonFromRow(i, j).value()->GetCallbackData()}});
             }
         }
-        printf("%s\n", (*js).dump(4).c_str());
     }
 
     auto handle = std::make_unique<CURL *>(curl_easy_init());
@@ -191,8 +190,6 @@ const bool STBPP::bot::SendMessage(const std::size_t &ChatID, const message &_me
 
         if (_InlineKeyboardMarkup.has_value())
             postfields += "&reply_markup=" + js->dump();
-
-        printf("\n%s\n", postfields.c_str());
 
         curl_easy_setopt(*handle, CURLOPT_POSTFIELDS, postfields.c_str());
         curl_easy_setopt(*handle, CURLOPT_URL, URL.c_str());
