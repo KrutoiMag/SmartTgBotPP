@@ -8,33 +8,23 @@
 #include "../includes/SmartTgBotPP.hpp"
 
 #include <cstdlib>
-#include <exception>
 #include <iostream>
 #include <memory>
 
 using namespace std;
 
-int main(void)
+int main()
 {
-    std::ios::sync_with_stdio(false);
+    ios::sync_with_stdio(false);
 
-    try
+    auto bot = std::make_unique<SmartTgBotPP::bot>("BOT_TOKEN");
+    auto watcher = std::make_unique<SmartTgBotPP::watcher>(*bot);
+
+    while (watcher->watch())
     {
-        SmartTgBotPP::bot bot("YOUR BOT TOKEN HERE!");
-        SmartTgBotPP::watcher watcher(bot);
-        SmartTgBotPP::message message;
-
-        message.SetText("Hi!");
-
-        while (watcher.watch())
-        {
-            cout << bot.GetUpdate()->GetMessage().GetChat().GetID() << endl;
-            bot.SendMessage(std::to_string(bot.GetUpdate()->GetMessage().GetChat().GetID()), message);
-        }
-    }
-    catch (exception &ex)
-    {
-        cout << ex.what();
+        if (!bot->GetUpdate().GetMessage().GetText().empty())
+            bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(),
+                             SmartTgBotPP::message(bot->GetUpdate().GetMessage().GetText()));
     }
 
     return EXIT_SUCCESS;
