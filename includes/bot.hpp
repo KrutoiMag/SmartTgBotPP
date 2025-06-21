@@ -1,12 +1,13 @@
 #pragma once
 
-#include <memory>
 #ifndef SMARTTGBOTPP_HPP
 #define SMARTTGBOTPP_HPP
 
 #include "API.hpp"
+#include "InlineKeyboardMarkup.hpp"
 #include "update.hpp"
 
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -29,7 +30,8 @@ namespace SmartTgBotPP
 
         TCVOID SetToken(TCSTR &BotToken), SetOffset(const std::size_t &offset);
 
-        const bool SendMessage(const std::string &ChatID, const message &_message) const;
+        const bool SendMessage(const std::size_t &ChatID, const message &_message,
+                               const std::optional<InlineKeyboardMarkup> &_InlineKeyboardMarkup = {}) const;
 
         update RequestUpdate(void);
 

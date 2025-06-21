@@ -16,3 +16,9 @@ do
 	add_files("test/*.cpp")
 	add_deps("SmartTgBotPP")
 end
+
+target("JSONTEST")
+do
+	set_kind("binary")
+	add_files("JSONTEST/*.cpp")
+end

@@ -158,15 +158,43 @@ STBPP::TCVOID SmartTgBotPP::bot::SetOffset(const std::size_t &offset)
     this->offset = offset;
 }
 
-const bool STBPP::bot::SendMessage(const std::string &ChatID, const message &_message) const
+const bool STBPP::bot::SendMessage(const std::size_t &ChatID, const message &_message,
+                                   const std::optional<InlineKeyboardMarkup> &_InlineKeyboardMarkup) const
 {
+    std::unique_ptr<nlohmann::json> js;
+
+    if (_InlineKeyboardMarkup.has_value())
+    {
+        js = std::make_unique<nlohmann::json>();
+        (*js)["inline_keyboard"] = nlohmann::json::array();
+
+        for (std::size_t i = 0; i < _InlineKeyboardMarkup->GetRowsCount(); i++)
+        {
+            (*js)["inline_keyboard"].emplace_back();
+
+            for (std::size_t j = 0; j < _InlineKeyboardMarkup->GetButtonsCountInRow(i); j++)
+            {
+                (*js)["inline_keyboard"].back().push_back(
+                    {{"text", _InlineKeyboardMarkup->GetButtonFromRow(i, j).value()->GetText()},
+                     {"callback_data", _InlineKeyboardMarkup->GetButtonFromRow(i, j).value()->GetCallbackData()}});
+            }
+        }
+        printf("%s\n", (*js).dump(4).c_str());
+    }
+
     auto handle = std::make_unique<CURL *>(curl_easy_init());
 
     if (*handle)
     {
-        std::string postfileds = "chat_id=" + ChatID + "&text=" + _message.GetText(),
+        std::string postfields = "chat_id=" + std::to_string(ChatID) + "&text=" + _message.GetText(),
                     URL = "https://api.telegram.org/bot" + BotToken + "/sendMessage";
-        curl_easy_setopt(*handle, CURLOPT_POSTFIELDS, postfileds.c_str());
+
+        if (_InlineKeyboardMarkup.has_value())
+            postfields += "&reply_markup=" + js->dump();
+
+        printf("\n%s\n", postfields.c_str());
+
+        curl_easy_setopt(*handle, CURLOPT_POSTFIELDS, postfields.c_str());
         curl_easy_setopt(*handle, CURLOPT_URL, URL.c_str());
 
         auto res = std::make_unique<CURLcode>(curl_easy_perform(*handle));
