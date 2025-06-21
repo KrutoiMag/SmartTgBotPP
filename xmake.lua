@@ -29,3 +29,10 @@ do
 	add_files("examples/simple.cpp")
 	add_deps("SmartTgBotPP")
 end
+
+target("examples/InlineKeyboard")
+do
+	set_kind("binary")
+	add_files("examples/InlineKeyboard.cpp")
+	add_deps("SmartTgBotPP")
+end
