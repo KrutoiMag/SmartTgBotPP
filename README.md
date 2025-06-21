@@ -32,7 +32,7 @@ int main()
 ```
 ### Building project
 ```shell
-xmake build SmartTgBotPP test
+xmake -b [SmartTgBotPP,test]
 ```
 ### Running a test program
 ```shell
