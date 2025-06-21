@@ -22,3 +22,10 @@ do
 	set_kind("binary")
 	add_files("JSONTEST/*.cpp")
 end
+
+target("examples/simple")
+do
+	set_kind("binary")
+	add_files("examples/simple.cpp")
+	add_deps("SmartTgBotPP")
+end
