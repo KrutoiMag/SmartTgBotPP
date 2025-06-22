@@ -1,66 +1,64 @@
 #include "../includes/SmartTgBotPP.hpp"
 
-#include <cinttypes>
 #include <cstdlib>
+#include <exception>
 #include <iostream>
 #include <memory>
-#include <optional>
-#include <vector>
+#include <stdexcept>
+#include <string>
 
 using namespace std;
-
-using KEYBOARD_BUTTONS = std::vector<std::vector<std::optional<std::unique_ptr<SmartTgBotPP::InlineKeyboardButton>>>>;
-
-const inline void InitInlineKeyboardButtons(KEYBOARD_BUTTONS &InlineKeyboardButtons)
-{
-    for (short i = 0; i < 3; i++)
-    {
-        InlineKeyboardButtons.emplace_back();
-        for (short j = 0; j < 3; j++)
-        {
-            InlineKeyboardButtons.back().emplace_back(
-                std::make_optional<std::unique_ptr<SmartTgBotPP::InlineKeyboardButton>>(
-                    std::make_unique<SmartTgBotPP::InlineKeyboardButton>("Text", "opt" + std::to_string(i + j))));
-        }
-    }
-}
-
-const inline void InitInlineKeyboardMarkup(SmartTgBotPP::InlineKeyboardMarkup &InlineKeyboardMarkup,
-                                           const KEYBOARD_BUTTONS &InlineKeyboardButtons)
-{
-    for (std::size_t i = 0; i < InlineKeyboardButtons.size(); i++)
-    {
-        InlineKeyboardMarkup.InsertRow();
-        for (const auto &j : InlineKeyboardButtons[i])
-        {
-            if (j.has_value())
-                InlineKeyboardMarkup.InsertButtonInRow(i, *(j.value()));
-        }
-    }
-}
 
 int main(int argc, char **argv)
 {
     ios::sync_with_stdio(false);
 
-    auto bot = std::make_unique<SmartTgBotPP::bot>(argv[1]);
-    auto watcher = std::make_unique<SmartTgBotPP::watcher>(*bot);
-    auto InlineKeyboardMarkup = std::make_unique<SmartTgBotPP::InlineKeyboardMarkup>();
-
-    KEYBOARD_BUTTONS InlineKeyboardButtons;
-
-    InitInlineKeyboardButtons(InlineKeyboardButtons);
-    InitInlineKeyboardMarkup(*InlineKeyboardMarkup, InlineKeyboardButtons);
-
-    while (watcher->watch())
+    try
     {
-        const std::string &t = bot->GetUpdate().GetMessage().GetText();
-
-        if (!t.empty())
+        if (argc != 2)
         {
-            bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(), SmartTgBotPP::message(t),
-                             std::make_optional<SmartTgBotPP::InlineKeyboardMarkup>(*InlineKeyboardMarkup));
+            throw std::runtime_error("No bot token provided!");
         }
+
+        auto bot = std::make_unique<SmartTgBotPP::bot>(argv[1]);
+        auto watcher = std::make_unique<SmartTgBotPP::watcher>(*bot);
+
+        std::unique_ptr<SmartTgBotPP::InlineKeyboardButton> InlineKeyboardButtons[3][3];
+
+        for (short i = 0; i < 3; i++)
+        {
+            for (short j = 0; j < 3; j++)
+            {
+                InlineKeyboardButtons[i][j] =
+                    std::make_unique<SmartTgBotPP::InlineKeyboardButton>("btn", "opt" + std::to_string(i + j));
+            }
+        }
+
+        auto InlineKeyboardMarkup = std::make_unique<SmartTgBotPP::InlineKeyboardMarkup>();
+
+        for (short i = 0; i < 3; i++)
+        {
+            InlineKeyboardMarkup->InsertRow();
+            for (short j = 0; j < 3; j++)
+            {
+                InlineKeyboardMarkup->InsertButtonInRow(i, *InlineKeyboardButtons[i][j]);
+            }
+        }
+
+        while (watcher->watch())
+        {
+            string t = bot->GetUpdate().GetMessage().GetText();
+	    cout << true << endl;
+            if (!t.empty())
+            {
+                bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(), SmartTgBotPP::message(t),
+                                 *InlineKeyboardMarkup);
+            }
+        }
+    }
+    catch (const std::exception &e)
+    {
+        cout << e.what() << endl;
     }
 
     return EXIT_SUCCESS;
