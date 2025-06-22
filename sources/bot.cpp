@@ -159,24 +159,24 @@ STBPP::TCVOID SmartTgBotPP::bot::SetOffset(const std::size_t &offset)
 }
 
 const bool STBPP::bot::SendMessage(const std::size_t &ChatID, const message &_message,
-                                   const std::optional<InlineKeyboardMarkup> &_InlineKeyboardMarkup) const
+                                   const InlineKeyboardMarkup &_InlineKeyboardMarkup) const
 {
     std::unique_ptr<nlohmann::json> js;
 
-    if (_InlineKeyboardMarkup.has_value())
+    if (_InlineKeyboardMarkup.GetRowsCount() > 0)
     {
         js = std::make_unique<nlohmann::json>();
         (*js)["inline_keyboard"] = nlohmann::json::array();
 
-        for (std::size_t i = 0; i < _InlineKeyboardMarkup->GetRowsCount(); i++)
+        for (std::size_t i = 0; i < _InlineKeyboardMarkup.GetRowsCount(); i++)
         {
             (*js)["inline_keyboard"].emplace_back();
 
-            for (std::size_t j = 0; j < _InlineKeyboardMarkup->GetButtonsCountInRow(i); j++)
+            for (std::size_t j = 0; j < _InlineKeyboardMarkup.GetButtonsCountInRow(i); j++)
             {
                 (*js)["inline_keyboard"].back().push_back(
-                    {{"text", _InlineKeyboardMarkup->GetButtonFromRow(i, j).value()->GetText()},
-                     {"callback_data", _InlineKeyboardMarkup->GetButtonFromRow(i, j).value()->GetCallbackData()}});
+                    {{"text", _InlineKeyboardMarkup.GetButtonFromRow(i, j).value()->GetText()},
+                     {"callback_data", _InlineKeyboardMarkup.GetButtonFromRow(i, j).value()->GetCallbackData()}});
             }
         }
     }
@@ -188,7 +188,7 @@ const bool STBPP::bot::SendMessage(const std::size_t &ChatID, const message &_me
         std::string postfields = "chat_id=" + std::to_string(ChatID) + "&text=" + _message.GetText(),
                     URL = "https://api.telegram.org/bot" + BotToken + "/sendMessage";
 
-        if (_InlineKeyboardMarkup.has_value())
+        if (_InlineKeyboardMarkup.GetRowsCount() > 0)
             postfields += "&reply_markup=" + js->dump();
 
         curl_easy_setopt(*handle, CURLOPT_POSTFIELDS, postfields.c_str());
