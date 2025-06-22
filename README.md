@@ -3,6 +3,7 @@
 - Compiler that supports C++17!
 - [libcurl](https://libcurl.se/) installed on your OS!
 - [xmake](https://xmake.io/)'s executable in your PATH!
+- [nlohmann/json](https://github.com/nlohmann/json) installed on your system!
 ### Sample
 ```cpp
 #include "../includes/SmartTgBotPP.hpp"
