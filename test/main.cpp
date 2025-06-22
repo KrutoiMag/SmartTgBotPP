@@ -45,8 +45,7 @@ int main(int argc, char **argv)
             {
                 cout << bot.GetUpdate().GetMessage().GetText() << endl;
                 message.SetText("UpdateID: " + std::to_string(bot.GetUpdate().GetUpdateID()));
-                bot.SendMessage(bot.GetUpdate().GetMessage().GetChat().GetID(), message,
-                                std::make_optional<SmartTgBotPP::InlineKeyboardMarkup>(InlineKeyboardMarkup));
+                bot.SendMessage(bot.GetUpdate().GetMessage().GetChat().GetID(), message, InlineKeyboardMarkup);
             }
         }
     }
