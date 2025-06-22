@@ -30,7 +30,7 @@ int main()
     return EXIT_SUCCESS;
 }
 ```
-Wanna some examples? &mdash; Checkout an [examples](examples) folder!
+Wanna some more examples? &mdash; Checkout an [examples](examples) folder!
 ### Building project
 ```shell
 xmake
