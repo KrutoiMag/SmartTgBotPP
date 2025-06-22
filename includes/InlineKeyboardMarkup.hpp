@@ -16,7 +16,7 @@ namespace SmartTgBotPP
         std::vector<std::vector<std::optional<std::shared_ptr<InlineKeyboardButton>>>> ButtonRows;
 
       public:
-        explicit InlineKeyboardMarkup() = default;
+        InlineKeyboardMarkup() = default;
         explicit InlineKeyboardMarkup(const InlineKeyboardMarkup &_InlineKeyboardMarkup);
 
         const void InsertRow();
