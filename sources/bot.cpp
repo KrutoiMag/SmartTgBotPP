@@ -1,6 +1,5 @@
 #include "../includes/bot.hpp"
 #include "../includes/chat.hpp"
-#include "../includes/nlohmann/json.hpp"
 #include "../includes/user.hpp"
 
 #include <assert.h>
@@ -11,6 +10,7 @@
 #include <optional>
 #include <stdexcept>
 #include <utility>
+#include <nlohmann/json.hpp>
 
 namespace STBPP = SmartTgBotPP;
 

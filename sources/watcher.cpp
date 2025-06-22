@@ -1,9 +1,9 @@
-#include "../includes/nlohmann/json.hpp"
 #include "../includes/watcher.hpp"
 
 #include <algorithm>
 #include <chrono>
 #include <memory>
+#include <nlohmann/json.hpp>
 
 using STBPPW = SmartTgBotPP::watcher;
 
