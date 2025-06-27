@@ -27,9 +27,12 @@ int main(int argc, char **argv)
 
         while (watcher->watch())
         {
-            if (!bot->GetUpdate().GetMessage().GetText().empty())
+            if (!bot->GetUpdate().empty() && !bot->GetUpdate().GetMessage().GetText().empty())
+            {
+                cout << "A new message from User in Your bot: " << bot->GetUpdate().GetMessage().GetText() << endl;
                 bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(),
                                  SmartTgBotPP::message(bot->GetUpdate().GetMessage().GetText()));
+            }
         }
     }
     catch (const exception &ex)
