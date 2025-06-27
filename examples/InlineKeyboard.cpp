@@ -47,11 +47,14 @@ int main(int argc, char **argv)
 
         while (watcher->watch())
         {
-            string t = bot->GetUpdate().GetMessage().GetText();
-            if (!t.empty())
+            if (!bot->GetUpdate().empty())
             {
-                bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(), SmartTgBotPP::message(t),
-                                 *InlineKeyboardMarkup);
+                string t = bot->GetUpdate().GetMessage().GetText();
+                if (!t.empty())
+                {
+                    bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(), SmartTgBotPP::message(t),
+                                     *InlineKeyboardMarkup);
+                }
             }
         }
     }
