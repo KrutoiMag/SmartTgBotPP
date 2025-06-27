@@ -11,6 +11,7 @@ namespace SmartTgBotPP
     {
         std::size_t UpdateID = 0;
         message _message, EditedMessage, ChannelPost, EditedChannelPost;
+        bool _empty = true;
 
       public:
         explicit update() = default;
@@ -18,11 +19,13 @@ namespace SmartTgBotPP
 
         const void SetUpdateID(const std::size_t &UpdateID), SetMessage(const message &_message),
             SetEditedMessage(const message &EditedMessage), SetChannelPost(const message &ChannelPost),
-            SetEditedChannelPost(const message &EditedChannelPost);
+            SetEditedChannelPost(const message &EditedChannelPost), SetEmpty(const bool &value);
 
         const std::size_t &GetUpdateID(void) const;
 
         message &GetMessage(void);
+
+        const bool &empty() const;
     };
 } // namespace SmartTgBotPP
 

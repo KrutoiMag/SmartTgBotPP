@@ -1,23 +1,40 @@
 #include "../includes/SmartTgBotPP.hpp"
 
 #include <cstdlib>
+#include <exception>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
-    ios::sync_with_stdio(false);
-
-    auto bot = std::make_unique<SmartTgBotPP::bot>("BOT_TOKEN");
-    auto watcher = std::make_unique<SmartTgBotPP::watcher>(*bot);
-
-    while (watcher->watch())
+    try
     {
-        if (!bot->GetUpdate().GetMessage().GetText().empty())
-            bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(),
-                             SmartTgBotPP::message(bot->GetUpdate().GetMessage().GetText()));
+        if (argc != 2)
+        {
+            if (argc > 2)
+                throw runtime_error("Too much arguments!");
+            else
+                throw runtime_error("Too few arguments, need to provide a bot token!");
+        }
+
+        ios::sync_with_stdio(false);
+
+        auto bot = std::make_unique<SmartTgBotPP::bot>(argv[1]);
+        auto watcher = std::make_unique<SmartTgBotPP::watcher>(*bot);
+
+        while (watcher->watch())
+        {
+            if (!bot->GetUpdate().GetMessage().GetText().empty())
+                bot->SendMessage(bot->GetUpdate().GetMessage().GetChat().GetID(),
+                                 SmartTgBotPP::message(bot->GetUpdate().GetMessage().GetText()));
+        }
+    }
+    catch (const exception &ex)
+    {
+        cout << ex.what() << endl;
     }
 
     return EXIT_SUCCESS;

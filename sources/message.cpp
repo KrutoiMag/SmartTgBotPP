@@ -35,6 +35,11 @@ const void SmartTgBotPP::message::SetChat(const chat &_chat)
     this->_chat = std::make_shared<chat>(_chat);
 }
 
+const void SmartTgBotPP::message::SetPhoto(const std::vector<PhotoSize> &photo)
+{
+    this->photo = std::make_shared<std::vector<PhotoSize>>(photo);
+}
+
 const int &SmartTgBotPP::message::GetID(void) const
 {
     return ID;
@@ -63,4 +68,9 @@ const void SmartTgBotPP::message::init(const message &_message)
 SmartTgBotPP::user &SmartTgBotPP::message::GetUser()
 {
     return *_user;
+}
+
+const std::vector<SmartTgBotPP::PhotoSize> &SmartTgBotPP::message::GetPhoto() const
+{
+    return *photo;
 }

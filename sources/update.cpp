@@ -19,6 +19,11 @@ const void SmartTgBotPP::update::SetMessage(const message &_message)
     this->_message = _message;
 }
 
+const void SmartTgBotPP::update::SetEmpty(const bool &value)
+{
+    _empty = value;
+}
+
 const std::size_t &SmartTgBotPP::update::GetUpdateID(void) const
 {
     return UpdateID;
@@ -27,4 +32,9 @@ const std::size_t &SmartTgBotPP::update::GetUpdateID(void) const
 SmartTgBotPP::message &SmartTgBotPP::update::GetMessage(void)
 {
     return _message;
+}
+
+const bool &SmartTgBotPP::update::empty() const
+{
+    return _empty;
 }

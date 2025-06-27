@@ -31,7 +31,8 @@ namespace SmartTgBotPP
         TCVOID SetToken(TCSTR &BotToken), SetOffset(const std::size_t &offset);
 
         const bool SendMessage(const std::size_t &ChatID, const message &_message,
-                               const InlineKeyboardMarkup &_InlineKeyboardMarkup = {}) const;
+                               const InlineKeyboardMarkup &_InlineKeyboardMarkup = {}) const,
+            ok() const;
 
         update RequestUpdate(void);
 

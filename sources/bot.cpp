@@ -7,40 +7,14 @@
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include <memory>
+#include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
 #include <optional>
 #include <stdexcept>
+#include <string>
 #include <utility>
-#include <nlohmann/json.hpp>
 
 namespace STBPP = SmartTgBotPP;
-
-inline const void ParseResultUpdateID(const std::string &raw)
-{
-}
-
-inline const void ParseResultMessageText(const std::string &raw)
-{
-}
-
-inline const void ParseResultMessageID(const std::string &raw)
-{
-}
-
-inline const void ParseResultMessageFrom(const std::string &raw)
-{
-}
-
-inline const void ParseResultMessageDate(const std::string &raw)
-{
-}
-
-class bla
-{
-  public:
-    explicit bla(void) = default;
-
-    bla &operator=(const bla &_bla);
-};
 
 inline const SmartTgBotPP::chat ParseResultMessageChat(const nlohmann::json &raw)
 {
@@ -57,8 +31,6 @@ inline const SmartTgBotPP::chat ParseResultMessageChat(const nlohmann::json &raw
 inline const void ParseResultMessage(const nlohmann::json &raw)
 {
     ParseResultMessageChat(raw);
-    ParseResultMessageDate(raw);
-    ParseResultMessageFrom(raw);
 }
 
 inline const std::optional<SmartTgBotPP::update> ParseResult(const std::string &raw)
@@ -72,6 +44,8 @@ inline const std::optional<SmartTgBotPP::update> ParseResult(const std::string &
         if (tmp->contains("ok") && tmp->at("ok").get<bool>() == true)
         {
             auto tt = std::make_unique<SmartTgBotPP::update>();
+
+            tt->SetEmpty(false);
 
             if (!tmp->at("result").empty())
             {
@@ -140,7 +114,24 @@ STBPP::bot::bot()
 
 STBPP::bot::bot(STBPP::TCSTR &BotToken) : BotToken(BotToken)
 {
-    bot();
+    init();
+
+    auto handle = std::make_unique<CURL *>(curl_easy_init());
+
+    if (*handle)
+    {
+        std::string temp, blu = "https://api.telegram.org/bot" + BotToken + "/getUpdates";
+
+        curl_easy_setopt(*handle, CURLOPT_URL, blu.c_str());
+        curl_easy_setopt(*handle, CURLOPT_WRITEFUNCTION, libCURLGetRaw);
+        curl_easy_setopt(*handle, CURLOPT_WRITEDATA, &temp);
+
+        auto success = std::make_unique<CURLcode>(curl_easy_perform(*handle));
+
+        JSON = temp;
+
+        curl_easy_cleanup(*handle);
+    }
 }
 
 STBPP::bot::~bot()
@@ -211,6 +202,11 @@ const bool STBPP::bot::SendMessage(const std::size_t &ChatID, const message &_me
     return *handle;
 }
 
+const bool SmartTgBotPP::bot::ok() const
+{
+    return nlohmann::json::parse(JSON)["ok"].get<bool>();
+}
+
 STBPP::update STBPP::bot::RequestUpdate(void)
 {
     auto handle = std::make_unique<CURL *>(curl_easy_init());
@@ -247,10 +243,10 @@ STBPP::update STBPP::bot::RequestUpdate(void)
 
     std::optional<update> parsed = ParseResult(temp);
 
-    if (parsed.has_value())
+    CurrentUpdate = std::make_shared<update>();
+
+    if (parsed.has_value() && !parsed.value().empty())
         CurrentUpdate = std::make_shared<update>(parsed.value());
-    else
-        CurrentUpdate = std::make_shared<update>();
 
     return *CurrentUpdate;
 }
